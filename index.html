@@ -98,7 +98,6 @@
             display: block;
         }
 
-        /* Unified Split Layout Strategy */
         .workspace-layout {
             display: flex;
             min-height: 500px;
@@ -159,7 +158,6 @@
             border-color: var(--accent-green);
         }
 
-        /* Display Views */
         .main-stage {
             flex: 1;
             display: flex;
@@ -169,7 +167,6 @@
             position: relative;
         }
 
-        /* Chat Specific Stage Styles */
         .chat-display {
             flex: 1;
             padding: 1.8rem;
@@ -204,7 +201,6 @@
             border-bottom-left-radius: 2px;
         }
 
-        /* Image Stage Styles */
         .image-canvas {
             flex: 1;
             display: flex;
@@ -221,7 +217,6 @@
             object-fit: contain;
         }
 
-        /* Buttons & Utilities */
         button.action-btn {
             background: var(--text-main);
             color: black;
@@ -283,7 +278,7 @@
             </div>
             <div class="main-stage">
                 <div class="chat-display" id="chatbox">
-                    <div class="message assistant">Terminal online. No API key or account creation required. Use the input box to the left to prompt the network.</div>
+                    <div id="welcome-message" class="message assistant">Terminal online. No API key or account creation required. Use the input box to the left to prompt the network.</div>
                 </div>
             </div>
         </div>
@@ -308,6 +303,7 @@
 
     <script>
         let messagesArray = [{ role: "system", content: "You are PhatBot, a helpful, advanced conversational AI helper." }];
+        let firstMessageSent = false;
 
         function switchTab(target) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -330,6 +326,13 @@
 
             if (!userText) return;
 
+            // Clear out the welcome text on the first submit
+            if (!firstMessageSent) {
+                const welcomeNode = document.getElementById('welcome-message');
+                if (welcomeNode) welcomeNode.remove();
+                firstMessageSent = true;
+            }
+
             statusTracker.innerText = "Processing response...";
             appendMessage(userText, 'user');
             inputField.value = '';
@@ -338,10 +341,14 @@
             const botMessageDiv = appendMessage("Thinking...", 'assistant');
 
             try {
+                // Switching model parameter payload to universal 'openai' target
                 const response = await fetch('https://text.pollinations.ai/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: messagesArray, model: "searchgpt" })
+                    body: JSON.stringify({ 
+                        messages: messagesArray, 
+                        model: "openai" 
+                    })
                 });
 
                 const data = await response.text();
