@@ -25,7 +25,8 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
+            padding-bottom: 40px;
+            box-sizing: border-box;
         }
 
         header {
@@ -51,7 +52,6 @@
             color: var(--text-muted);
             margin-top: 0.6rem;
             font-size: 0.95rem;
-            letter-spacing: 0.02em;
         }
 
         .tab-container {
@@ -71,7 +71,7 @@
             cursor: pointer;
             font-weight: 700;
             font-size: 0.9rem;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s;
         }
 
         .tab-btn.active {
@@ -85,42 +85,110 @@
             display: none;
             width: 90%;
             max-width: 950px;
-            height: 580px;
             background: var(--card-dark);
             border: 1px solid var(--border-color);
             border-radius: 20px;
             backdrop-filter: blur(20px);
             overflow: hidden;
-            box-sizing: border-box;
             box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            box-sizing: border-box;
         }
 
         .panel.active {
-            display: flex;
-            flex-direction: column;
+            display: block;
         }
 
-        .chat-output {
+        /* Unified Split Layout Strategy */
+        .workspace-layout {
+            display: flex;
+            min-height: 500px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .workspace-layout {
+                flex-direction: column;
+            }
+            .sidebar-control {
+                width: 100% !important;
+                border-right: none !important;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+
+        .sidebar-control {
+            width: 320px;
+            border-right: 1px solid var(--border-color);
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            background: rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .sidebar-control label {
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .sidebar-control textarea {
+            width: 100%;
+            height: 140px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: white;
+            padding: 0.8rem;
+            box-sizing: border-box;
+            resize: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .sidebar-control textarea:focus {
+            border-color: var(--accent-glow);
+        }
+
+        #image-panel .sidebar-control textarea:focus {
+            border-color: var(--accent-green);
+        }
+
+        /* Display Views */
+        .main-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
+            min-height: 400px;
+            position: relative;
+        }
+
+        /* Chat Specific Stage Styles */
+        .chat-display {
             flex: 1;
             padding: 1.8rem;
             overflow-y: auto;
+            max-height: 480px;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            background: rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
         }
 
         .message {
-            max-width: 70%;
+            max-width: 85%;
             padding: 1rem 1.25rem;
             border-radius: 14px;
             font-size: 0.98rem;
             line-height: 1.5;
             word-wrap: break-word;
-            animation: fadeIn 0.3s ease;
         }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .message.user {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
@@ -136,89 +204,24 @@
             border-bottom-left-radius: 2px;
         }
 
-        .chat-input-row {
-            padding: 1.2rem;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            gap: 12px;
-            background: rgba(5, 5, 8, 0.6);
-            align-items: center;
-        }
-
-        .chat-input-row textarea {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: white;
-            padding: 0.85rem;
-            resize: none;
-            height: 50px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .chat-input-row textarea:focus {
-            border-color: var(--accent-glow);
-        }
-
-        .image-layout {
-            display: flex;
-            height: 100%;
-            width: 100%;
-        }
-
-        .image-sidebar {
-            width: 320px;
-            border-right: 1px solid var(--border-color);
-            padding: 1.8rem;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            background: rgba(0, 0, 0, 0.2);
-            box-sizing: border-box;
-        }
-
-        .image-sidebar textarea {
-            width: 100%;
-            height: 140px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: white;
-            padding: 0.8rem;
-            box-sizing: border-box;
-            resize: none;
-            font-family: inherit;
-            font-size: 0.92rem;
-            outline: none;
-        }
-
-        .image-sidebar textarea:focus {
-            border-color: var(--accent-green);
-        }
-
+        /* Image Stage Styles */
         .image-canvas {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
-            background: rgba(0, 0, 0, 0.4);
-            position: relative;
         }
 
         .image-canvas img {
             max-width: 100%;
-            max-height: 100%;
+            max-height: 450px;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             object-fit: contain;
         }
 
+        /* Buttons & Utilities */
         button.action-btn {
             background: var(--text-main);
             color: black;
@@ -229,6 +232,7 @@
             cursor: pointer;
             font-size: 0.92rem;
             transition: transform 0.2s, opacity 0.15s;
+            width: 100%;
         }
 
         button.action-btn:active {
@@ -240,6 +244,7 @@
             font-size: 0.85rem;
             text-align: center;
             font-weight: 500;
+            margin-top: 5px;
         }
 
         .spinner {
@@ -259,7 +264,7 @@
 
     <header>
         <h1>PhatBot Neo Studio</h1>
-        <p class="subtitle">Zero Setup • Keyless Infrastructure • Unlimited Sandbox Framework</p>
+        <p class="subtitle">Zero Setup • Keyless Infrastructure • Sandbox Framework</p>
     </header>
 
     <div class="tab-container">
@@ -267,28 +272,36 @@
         <button id="btn-image" class="tab-btn" onclick="switchTab('image')">🎨 Digital Art Room</button>
     </div>
 
-    <!-- PANEL 1: TEXT CHAT -->
+    <!-- PANEL 1: CONVERSATIONAL ENGINE -->
     <div id="chat-panel" class="panel active">
-        <div class="chat-output" id="chatbox">
-            <div class="message assistant">Terminal online. No API key or account creation required. Type your message below to prompt the network.</div>
-        </div>
-        <div class="chat-input-row">
-            <textarea id="chat-input" placeholder="Ask PhatBot anything..."></textarea>
-            <button class="action-btn" onclick="runChat()" style="background: var(--accent-glow); color: white;">Send</button>
+        <div class="workspace-layout">
+            <div class="sidebar-control">
+                <label>PROMPT CONVERSATION</label>
+                <textarea id="chat-input" placeholder="Type your message here to query the network..."></textarea>
+                <button class="action-btn" onclick="runChat()" style="background: var(--accent-glow); color: white;">Send Query</button>
+                <div class="status-tracker" id="chat-status">System Live</div>
+            </div>
+            <div class="main-stage">
+                <div class="chat-display" id="chatbox">
+                    <div class="message assistant">Terminal online. No API key or account creation required. Use the input box to the left to prompt the network.</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- PANEL 2: IMAGE CORE -->
+    <!-- PANEL 2: DIGITAL ART ROOM -->
     <div id="image-panel" class="panel">
-        <div class="image-layout">
-            <div class="image-sidebar">
-                <label style="font-weight: 700; font-size: 0.8rem; letter-spacing: 0.05em; color: var(--text-muted);">PROMPT SPECIFICATION</label>
+        <div class="workspace-layout">
+            <div class="sidebar-control">
+                <label>PROMPT SPECIFICATION</label>
                 <textarea id="image-prompt" placeholder="Describe your masterpiece (e.g., A hyperrealistic chrome robotic tiger sitting on a neon skyscraper, synthwave aesthetic)"></textarea>
-                <button class="action-btn" onclick="generateImage()" style="background: var(--accent-green); color: white; width: 100%;">Render Frame</button>
+                <button class="action-btn" onclick="generateImage()" style="background: var(--accent-green); color: white;">Render Frame</button>
                 <div class="status-tracker" id="img-status">Canvas Engine Idle</div>
             </div>
-            <div class="image-canvas" id="canvas-view">
-                <div class="spinner" id="img-spinner"></div>
+            <div class="main-stage">
+                <div class="image-canvas" id="canvas-view">
+                    <div class="spinner" id="img-spinner"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -312,10 +325,12 @@
         async function runChat() {
             const inputField = document.getElementById('chat-input');
             const chatbox = document.getElementById('chatbox');
+            const statusTracker = document.getElementById('chat-status');
             const userText = inputField.value.trim();
 
             if (!userText) return;
 
+            statusTracker.innerText = "Processing response...";
             appendMessage(userText, 'user');
             inputField.value = '';
             messagesArray.push({ role: "user", content: userText });
@@ -332,9 +347,11 @@
                 const data = await response.text();
                 botMessageDiv.innerText = data.trim();
                 messagesArray.push({ role: "assistant", content: data.trim() });
+                statusTracker.innerText = "System Live";
             } catch (error) {
                 console.error(error);
                 botMessageDiv.innerText = "Connection lost. Please try your message again.";
+                statusTracker.innerText = "Connection error.";
             }
 
             chatbox.scrollTop = chatbox.scrollHeight;
@@ -383,7 +400,7 @@
 
             imageObject.onerror = function() {
                 spinner.style.display = "none";
-                statusTracker.innerText = "Render failed. Try a slightly altered description.";
+                statusTracker.innerText = "Render failed.";
             };
         }
 
